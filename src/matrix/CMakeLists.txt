@@ -1,0 +1,1 @@
+add_sublibrary(matrix NO_PTX_OPTIONS)

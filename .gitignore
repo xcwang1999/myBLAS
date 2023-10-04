@@ -1,0 +1,7 @@
+.vscode/
+build/
+lib/
+bin/
+*.ncu-rep
+data/
+executable
