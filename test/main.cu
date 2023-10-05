@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "matrix/matrixGPU.cuh"
 #include "test_hgemm_padding.cuh"
 #include "test_sgemm.cuh"

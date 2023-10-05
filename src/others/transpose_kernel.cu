@@ -19,7 +19,7 @@ __global__ void transposeKernel(T *inputMatrix, int nRows, int nCols) {
 }
 
 template __global__ void transposeKernel<half>(half *inputMatrix, int nRows,
-                                                int nCols);
+                                               int nCols);
 template __global__ void transposeKernel<float>(float *inputMatrix, int nRows,
                                                 int nCols);
 template __global__ void transposeKernel<double>(double *inputMatrix, int nRows,

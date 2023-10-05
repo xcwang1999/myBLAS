@@ -47,3 +47,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 add_subdirectory(src)
 add_subdirectory(test)
+
+set(_saved_CMAKE_MESSAGE_LOG_LEVEL ${CMAKE_MESSAGE_LOG_LEVEL})
+set(CMAKE_MESSAGE_LOG_LEVEL ERROR)
+add_subdirectory(third-party/OpenBLAS)
+set(CMAKE_MESSAGE_LOG_LEVEL ${_saved_CMAKE_MESSAGE_LOG_LEVEL})

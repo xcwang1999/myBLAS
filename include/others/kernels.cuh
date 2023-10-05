@@ -4,8 +4,8 @@
 template <typename T>
 __global__ void transposeKernel(T *inputMatrix, int nRows, int nCols);
 
-extern template __global__ void transposeKernel<half>(half *inputMatrix, int nRows,
-                                                int nCols);
+extern template __global__ void transposeKernel<half>(half *inputMatrix,
+                                                      int nRows, int nCols);
 extern template __global__ void transposeKernel<float>(float *inputMatrix,
                                                        int nRows, int nCols);
 extern template __global__ void transposeKernel<double>(double *inputMatrix,
@@ -21,20 +21,20 @@ __global__ void nativeMatmul3(T *result, const T *lhs, const T *rhs,
                               int lhsNRows, int rhsNCols, int lhsNCols);
 
 extern template __global__ void nativeMatmul1<half>(half *result,
-                                                     const half *lhs,
-                                                     const half *rhs,
-                                                     int lhsNRows, int rhsNCols,
-                                                     int lhsNCols);
+                                                    const half *lhs,
+                                                    const half *rhs,
+                                                    int lhsNRows, int rhsNCols,
+                                                    int lhsNCols);
 extern template __global__ void nativeMatmul2<half>(half *result,
-                                                     const half *lhs,
-                                                     const half *rhs,
-                                                     int lhsNRows, int rhsNCols,
-                                                     int lhsNCols);
+                                                    const half *lhs,
+                                                    const half *rhs,
+                                                    int lhsNRows, int rhsNCols,
+                                                    int lhsNCols);
 extern template __global__ void nativeMatmul3<half>(half *result,
-                                                     const half *lhs,
-                                                     const half *rhs,
-                                                     int lhsNRows, int rhsNCols,
-                                                     int lhsNCols);
+                                                    const half *lhs,
+                                                    const half *rhs,
+                                                    int lhsNRows, int rhsNCols,
+                                                    int lhsNCols);
 
 extern template __global__ void nativeMatmul1<float>(float *result,
                                                      const float *lhs,

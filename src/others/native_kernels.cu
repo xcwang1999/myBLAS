@@ -1,4 +1,4 @@
-#include<cuda_fp16.h>
+#include <cuda_fp16.h>
 template <typename T>
 __global__ void nativeMatmul1(T *result, const T *lhs, const T *rhs,
                               int lhsNRows, int rhsNCols, int lhsNCols) {
@@ -89,21 +89,15 @@ __global__ void nativeMatmul3(T *C, const T *A, const T *B, int M, int N,
   if (globalRow < M && globalCol < N) C[globalRow * N + globalCol] = tempSum;
 }
 
-template __global__ void nativeMatmul1<half>(half *result,
-                                                     const half *lhs,
-                                                     const half *rhs,
-                                                     int lhsNRows, int rhsNCols,
-                                                     int lhsNCols);
-template __global__ void nativeMatmul2<half>(half *result,
-                                                     const half *lhs,
-                                                     const half *rhs,
-                                                     int lhsNRows, int rhsNCols,
-                                                     int lhsNCols);
-template __global__ void nativeMatmul3<half>(half *result,
-                                                     const half *lhs,
-                                                     const half *rhs,
-                                                     int lhsNRows, int rhsNCols,
-                                                     int lhsNCols);
+template __global__ void nativeMatmul1<half>(half *result, const half *lhs,
+                                             const half *rhs, int lhsNRows,
+                                             int rhsNCols, int lhsNCols);
+template __global__ void nativeMatmul2<half>(half *result, const half *lhs,
+                                             const half *rhs, int lhsNRows,
+                                             int rhsNCols, int lhsNCols);
+template __global__ void nativeMatmul3<half>(half *result, const half *lhs,
+                                             const half *rhs, int lhsNRows,
+                                             int rhsNCols, int lhsNCols);
 template __global__ void nativeMatmul1<float>(float *result, const float *lhs,
                                               const float *rhs, int lhsNRows,
                                               int rhsNCols, int lhsNCols);
