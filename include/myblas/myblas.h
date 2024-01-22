@@ -28,16 +28,16 @@ template <typename KernelId>
 void sgemm(const int M, const int N, const int K, float* A, float* B, float* C);
 
 extern template void sgemm<KernelId1>(const int M, const int N, const int K,
-                                    float* A, float* B, float* C);
+                                      float* A, float* B, float* C);
 extern template void sgemm<KernelId2>(const int M, const int N, const int K,
-                                    float* A, float* B, float* C);
+                                      float* A, float* B, float* C);
 extern template void sgemm<KernelId3>(const int M, const int N, const int K,
-                                    float* A, float* B, float* C);
+                                      float* A, float* B, float* C);
 extern template void sgemm<KernelId4>(const int M, const int N, const int K,
-                                    float* A, float* B, float* C);
+                                      float* A, float* B, float* C);
 extern template void sgemm<KernelId5>(const int M, const int N, const int K,
-                                    float* A, float* B, float* C);
+                                      float* A, float* B, float* C);
 extern template void sgemm<KernelId6>(const int M, const int N, const int K,
-                                    float* A, float* B, float* C);
+                                      float* A, float* B, float* C);
 
 }  // namespace myblas::sgemm

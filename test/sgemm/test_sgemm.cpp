@@ -1,18 +1,16 @@
-#include <gtest/gtest.h>
-
 #include <cublas_v2.h>
 #include <cuda_runtime.h>
+#include <gtest/gtest.h>
 
 #include "myblas/myblas.h"
-#include "myblas_internal/utils.h"
-
 #include "myblas_internal/helper_macros.h"
+#include "myblas_internal/utils.h"
 
 namespace {
 
 using Element = float;
 
-template<typename KernelId>
+template <typename KernelId>
 class TestSgemmKernel : public ::testing::Test {
  protected:
   const float alpha = 1.0f;
@@ -33,7 +31,7 @@ class TestSgemmKernel : public ::testing::Test {
   void TestRoutine();
 };
 
-template<typename KernelId>
+template <typename KernelId>
 void TestSgemmKernel<KernelId>::ResetDevice() {
   CHECK_CUDA(cudaMemcpy(A_device.get(), A_host.get(), A_size * sizeof(Element),
                         cudaMemcpyHostToDevice));
@@ -43,7 +41,7 @@ void TestSgemmKernel<KernelId>::ResetDevice() {
                         cudaMemcpyHostToDevice));
 }
 
-template<typename KernelId>
+template <typename KernelId>
 void TestSgemmKernel<KernelId>::SetValue() {
   for (int i = 0; i < A_size; ++i)
     A_host[i] = myblas::make_random<Element>(0, 1);
@@ -53,7 +51,7 @@ void TestSgemmKernel<KernelId>::SetValue() {
   memset(C_host.get(), 0, C_size * sizeof(Element));
 }
 
-template<typename KernelId>
+template <typename KernelId>
 void TestSgemmKernel<KernelId>::SetUp() {
   A_size = M * K;
   B_size = K * N;
@@ -73,7 +71,7 @@ void TestSgemmKernel<KernelId>::SetUp() {
   CHECK_CUBLAS(cublasCreate(&cublasHandle));
 }
 
-template<typename KernelId>
+template <typename KernelId>
 void TestSgemmKernel<KernelId>::TearDown() {
   CHECK_CUBLAS(cublasDestroy(cublasHandle));
   A_device.reset(nullptr);
@@ -81,7 +79,7 @@ void TestSgemmKernel<KernelId>::TearDown() {
   C_device.reset(nullptr);
 }
 
-template<typename KernelId>
+template <typename KernelId>
 void TestSgemmKernel<KernelId>::TestRoutine() {
   ResetDevice();
 
@@ -111,28 +109,22 @@ void TestSgemmKernel<KernelId>::TestRoutine() {
 
   if (!isAllEqual) {
     myblas::print_matrix(M, N, C_mykernel_result.get(), KernelId::label);
-    myblas::print_matrix(M, N, C_cublas_result.get(), "cublasVS" + std::string(KernelId::label));
+    myblas::print_matrix(M, N, C_cublas_result.get(),
+                         "cublasVS" + std::string(KernelId::label));
   }
 }
 
-using KernelTypes = ::testing::Types<
-    myblas::sgemm::KernelId1,
-    myblas::sgemm::KernelId2,
-    myblas::sgemm::KernelId3,
-    myblas::sgemm::KernelId4,
-    myblas::sgemm::KernelId5,
-    myblas::sgemm::KernelId6
-    >;
+using KernelTypes =
+    ::testing::Types<myblas::sgemm::KernelId1, myblas::sgemm::KernelId2,
+                     myblas::sgemm::KernelId3, myblas::sgemm::KernelId4,
+                     myblas::sgemm::KernelId5, myblas::sgemm::KernelId6>;
 
 TYPED_TEST_SUITE(TestSgemmKernel, KernelTypes);
 
-TYPED_TEST(TestSgemmKernel, TestSgemm) {
-  this->TestRoutine();
-}
+TYPED_TEST(TestSgemmKernel, TestSgemm) { this->TestRoutine(); }
 }  // namespace
 
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
-

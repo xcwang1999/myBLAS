@@ -1,6 +1,6 @@
 #include "myblas_internal/helper_macros.h"
 
-namespace myblas::sgemm{
+namespace myblas::sgemm {
 
 __global__ void sgemmKernel1(const int M, const int N, const int K,
                              const float *__restrict__ A,
@@ -97,4 +97,4 @@ void sgemmV1(const int M, const int N, const int K, const float *A,
   sgemmKernel1<<<grid_size, block_size>>>(M, N, K, A, B, C);
 }
 
-} //namespace myblas::sgemm
+}  // namespace myblas::sgemm

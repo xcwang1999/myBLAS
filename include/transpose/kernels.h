@@ -12,4 +12,4 @@ extern template void transpose<float>(float *inputMatrix, const int nRows,
 extern template void transpose<double>(double *inputMatrix, const int nRows,
                                        const int nCols);
 
-} // namespace myblas::transpose
+}  // namespace myblas::transpose

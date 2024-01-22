@@ -3,8 +3,8 @@
 #include <cuda_runtime.h>
 
 #include "myblas/myblas.h"
-#include "myblas_internal/utils.h"
 #include "myblas_internal/helper_macros.h"
+#include "myblas_internal/utils.h"
 
 namespace {
 
@@ -90,8 +90,9 @@ BENCHMARK_DEFINE_F(BenchmarkSgemm, cublas)(benchmark::State& state) {
     ResetDevice();
     CHECK_CUDA(cudaDeviceSynchronize());
     state.ResumeTiming();
-    CHECK_CUBLAS(cublasSgemm(cublasHandle, CUBLAS_OP_N, CUBLAS_OP_N, N, M, K, &alpha, B_device.get(), N,
-                             A_device.get(), K, &beta, C_device.get(), N));
+    CHECK_CUBLAS(cublasSgemm(cublasHandle, CUBLAS_OP_N, CUBLAS_OP_N, N, M, K,
+                             &alpha, B_device.get(), N, A_device.get(), K,
+                             &beta, C_device.get(), N));
     CHECK_CUDA(cudaDeviceSynchronize());
   }
 
@@ -100,18 +101,21 @@ BENCHMARK_DEFINE_F(BenchmarkSgemm, cublas)(benchmark::State& state) {
 }
 
 template <typename KernelId>
-class BenchmarkSgemmKernel : public BenchmarkSgemm{
+class BenchmarkSgemmKernel : public BenchmarkSgemm {
  public:
   BenchmarkSgemmKernel();
+
  protected:
   void BenchmarkCase(::benchmark::State&);
+
  private:
   static constexpr char const fixture_label_[] = "BenchmarkSgemmKernel";
 };
 
 template <typename KernelId>
-BenchmarkSgemmKernel<KernelId>::BenchmarkSgemmKernel(){
-  this->SetName(std::string(fixture_label_) + "/" + std::string(KernelId::label));
+BenchmarkSgemmKernel<KernelId>::BenchmarkSgemmKernel() {
+  this->SetName(std::string(fixture_label_) + "/" +
+                std::string(KernelId::label));
 }
 
 template <typename KernelId>
@@ -121,23 +125,22 @@ void BenchmarkSgemmKernel<KernelId>::BenchmarkCase(::benchmark::State& state) {
     ResetDevice();
     CHECK_CUDA(cudaDeviceSynchronize());
     state.ResumeTiming();
-    myblas::sgemm::sgemm<KernelId>(M, N, K, A_device.get(), B_device.get(), C_device.get());
+    myblas::sgemm::sgemm<KernelId>(M, N, K, A_device.get(), B_device.get(),
+                                   C_device.get());
     CHECK_CUDA(cudaDeviceSynchronize());
   }
 
   state.counters["TFLOPS"] =
       benchmark::Counter(TFLOPS, benchmark::Counter::kIsIterationInvariantRate);
-
 }
 
-#define BENCHMARK_SGEMM_ARGS          \
-  ->DenseRange(1024, 1024 * 2, 1024)  \
-  ->Iterations(1)                 \
-  ->UseRealTime()                 \
-  ->Unit(benchmark::kMillisecond);
+#define BENCHMARK_SGEMM_ARGS         \
+  ->DenseRange(1024, 1024 * 2, 1024) \
+      ->Iterations(1)                \
+      ->UseRealTime()                \
+      ->Unit(benchmark::kMillisecond);
 
-} // namespace
-
+}  // namespace
 
 int main(int argc, char** argv) {
   char arg0_default[] = "benchmark";
@@ -152,25 +155,30 @@ int main(int argc, char** argv) {
   BENCHMARK_REGISTER_F(BenchmarkSgemm, cublas)
   BENCHMARK_SGEMM_ARGS
 
-  ::benchmark::internal::RegisterBenchmarkInternal(new BenchmarkSgemmKernel<myblas::sgemm::KernelId1>)
-  BENCHMARK_SGEMM_ARGS
+  ::benchmark::internal::RegisterBenchmarkInternal(
+      new BenchmarkSgemmKernel<myblas::sgemm::KernelId1>) BENCHMARK_SGEMM_ARGS
 
-  ::benchmark::internal::RegisterBenchmarkInternal(new BenchmarkSgemmKernel<myblas::sgemm::KernelId2>)
-  BENCHMARK_SGEMM_ARGS
+      ::benchmark::internal::RegisterBenchmarkInternal(
+          new BenchmarkSgemmKernel<myblas::sgemm::KernelId2>)
+          BENCHMARK_SGEMM_ARGS
 
-  ::benchmark::internal::RegisterBenchmarkInternal(new BenchmarkSgemmKernel<myblas::sgemm::KernelId3>)
-  BENCHMARK_SGEMM_ARGS
+      ::benchmark::internal::RegisterBenchmarkInternal(
+          new BenchmarkSgemmKernel<myblas::sgemm::KernelId3>)
+          BENCHMARK_SGEMM_ARGS
 
-  ::benchmark::internal::RegisterBenchmarkInternal(new BenchmarkSgemmKernel<myblas::sgemm::KernelId4>)
-  BENCHMARK_SGEMM_ARGS
+      ::benchmark::internal::RegisterBenchmarkInternal(
+          new BenchmarkSgemmKernel<myblas::sgemm::KernelId4>)
+          BENCHMARK_SGEMM_ARGS
 
-  ::benchmark::internal::RegisterBenchmarkInternal(new BenchmarkSgemmKernel<myblas::sgemm::KernelId5>)
-  BENCHMARK_SGEMM_ARGS
+      ::benchmark::internal::RegisterBenchmarkInternal(
+          new BenchmarkSgemmKernel<myblas::sgemm::KernelId5>)
+          BENCHMARK_SGEMM_ARGS
 
-  ::benchmark::internal::RegisterBenchmarkInternal(new BenchmarkSgemmKernel<myblas::sgemm::KernelId6>)
-  BENCHMARK_SGEMM_ARGS
+      ::benchmark::internal::RegisterBenchmarkInternal(
+          new BenchmarkSgemmKernel<myblas::sgemm::KernelId6>)
+          BENCHMARK_SGEMM_ARGS
 
-  ::benchmark::RunSpecifiedBenchmarks();
+      ::benchmark::RunSpecifiedBenchmarks();
   ::benchmark::Shutdown();
   return 0;
 }

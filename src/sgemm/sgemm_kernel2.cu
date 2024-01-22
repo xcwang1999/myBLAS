@@ -84,4 +84,4 @@ void sgemmV2(const int M, const int N, const int K, float *A, float *B,
   sgemmKernel2<<<grid_size, block_size>>>(M, N, K, A, B, C);
 }
 
-} // namespace myblas::sgemm
+}  // namespace myblas::sgemm

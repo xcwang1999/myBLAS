@@ -7,7 +7,7 @@ macro(add_myblas_unit_test target)
             ${srcs}
     )
     target_include_directories(${target} SYSTEM PRIVATE
-             ${CUDAToolkit_INCLUDE_DIRS}
+            ${CUDAToolkit_INCLUDE_DIRS}
     )
     target_include_directories(${target} PRIVATE
             ${PROJECT_SOURCE_DIR}/include

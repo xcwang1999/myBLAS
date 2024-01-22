@@ -4,6 +4,7 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+
 #include "helper_macros.h"
 
 namespace myblas {
@@ -169,7 +170,7 @@ struct dot_product_impl<Index<IndexArgs...>, Stride<StrideArgs...>> {
   template <std::size_t... Is>
   MYBLAS_HOST_DEVICE static constexpr int compute_impl(
       const Index<IndexArgs...>& idx, const Stride<StrideArgs...>& stride,
-                                    std::index_sequence<Is...>) {
+      std::index_sequence<Is...>) {
     return (
         ... +
         dot_product_impl<

@@ -244,4 +244,4 @@ void sgemmV6(const int M, const int N, const int K, const float *A,
   sgemmKernel6<<<grid_size, block_size>>>(M, N, K, A, B, C);
 }
 
-} // namespace myblas::sgemm
+}  // namespace myblas::sgemm
