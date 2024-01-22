@@ -4,6 +4,7 @@
 
 #include "myblas/myblas.h"
 #include "myblas_internal/utils.h"
+#include "myblas_internal/helper_macros.h"
 
 namespace {
 

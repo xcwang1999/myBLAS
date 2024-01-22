@@ -6,6 +6,8 @@
 #include "myblas/myblas.h"
 #include "myblas_internal/utils.h"
 
+#include "myblas_internal/helper_macros.h"
+
 namespace {
 
 using Element = float;
@@ -15,9 +17,9 @@ class TestSgemmKernel : public ::testing::Test {
  protected:
   const float alpha = 1.0f;
   const float beta = 0.0f;
-  int M = 1024 * 1;
-  int N = 1024 * 2;
-  int K = 1024 * 3;
+  int M = 1024 * 6;
+  int N = 1024 * 7;
+  int K = 1024 * 8;
   cublasHandle_t cublasHandle;
   std::unique_ptr<Element[]> A_host, B_host, C_host;
   std::unique_ptr<Element[]> C_cublas_result, C_mykernel_result;
@@ -82,18 +84,17 @@ void TestSgemmKernel<KernelId>::TearDown() {
 template<typename KernelId>
 void TestSgemmKernel<KernelId>::TestRoutine() {
   ResetDevice();
-  CHECK_CUDA(cudaDeviceSynchronize());
 
   myblas::sgemm::sgemm<KernelId>(M, N, K, A_device.get(), B_device.get(),
                                  C_device.get());
+
   CHECK_CUDA(cudaDeviceSynchronize());
+  CHECK_CUDA(cudaGetLastError());
 
   CHECK_CUDA(cudaMemcpy(C_mykernel_result.get(), C_device.get(),
                         C_size * sizeof(Element), cudaMemcpyDeviceToHost));
-  CHECK_CUDA(cudaDeviceSynchronize());
 
   ResetDevice();
-  CHECK_CUDA(cudaDeviceSynchronize());
 
   CHECK_CUBLAS(cublasSgemm(cublasHandle, CUBLAS_OP_N, CUBLAS_OP_N, N, M, K,
                            &alpha, B_device.get(), N, A_device.get(), K, &beta,
@@ -102,7 +103,6 @@ void TestSgemmKernel<KernelId>::TestRoutine() {
 
   CHECK_CUDA(cudaMemcpy(C_cublas_result.get(), C_device.get(),
                         C_size * sizeof(Element), cudaMemcpyDeviceToHost));
-  CHECK_CUDA(cudaDeviceSynchronize());
 
   const bool isAllEqual =
       myblas::verify(C_mykernel_result.get(), C_cublas_result.get(), C_size);

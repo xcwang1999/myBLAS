@@ -1,0 +1,2 @@
+add_myblas_unit_test(test_linear test_linear.cpp)
+add_myblas_unit_test(test_reshape test_reshape.cpp)

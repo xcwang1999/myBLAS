@@ -24,3 +24,5 @@ endmacro()
 include(GoogleTest)
 
 add_subdirectory(sgemm)
+add_subdirectory(layout)
+add_subdirectory(ptx)
