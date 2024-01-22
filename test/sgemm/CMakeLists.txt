@@ -1,0 +1,1 @@
+add_myblas_unit_test(test_sgemm test_sgemm.cpp)

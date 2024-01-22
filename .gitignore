@@ -1,5 +1,7 @@
 .vscode/
+.idea/
+
 build/
-lib/
+cmake-build-*/
+
 data/
-executable

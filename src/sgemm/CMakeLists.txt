@@ -1,1 +1,1 @@
-add_sublibrary(sgemm)
+add_myblas_sublibrary(sgemm)

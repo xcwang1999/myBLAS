@@ -1,0 +1,2 @@
+add_myblas_benchmark(benchmark_sgemm benchmark_sgemm.cpp)
+

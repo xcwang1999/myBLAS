@@ -1,14 +1,16 @@
-#include "utils.h"
+#include "myblas_internal/utils.h"
+
+namespace myblas::sgemm {
 
 __global__ void sgemmKernel6(const int M, const int N, const int K,
                              const float *__restrict__ A,
                              const float *__restrict__ B,
                              float *__restrict__ C) {
-  const int BM = 128;
-  const int BN = 128;
-  const int BK = 8;
-  const int TM = 8;
-  const int TN = 8;
+  constexpr int BM = 128;
+  constexpr int BN = 128;
+  constexpr int BK = 8;
+  constexpr int TM = 8;
+  constexpr int TN = 8;
   const int threadRow = threadIdx.x / (BN / TN);
   const int threadCol = threadIdx.x % (BN / TN);
 
@@ -229,3 +231,17 @@ __global__ void sgemmKernel6(const int M, const int N, const int K,
     }
   }
 }
+
+void sgemmV6(const int M, const int N, const int K, const float *A,
+             const float *B, float *C) {
+  constexpr int BM = 128;
+  constexpr int BN = 128;
+  constexpr int TM = 8;
+  constexpr int TN = 8;
+  constexpr dim3 block_size(BM * BN / (TM * TN));
+  const dim3 grid_size((N - 1) / BN + 1, (M - 1) / BM + 1);
+
+  sgemmKernel6<<<grid_size, block_size>>>(M, N, K, A, B, C);
+}
+
+} // namespace myblas::sgemm

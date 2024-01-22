@@ -1,0 +1,1 @@
+add_myblas_sublibrary(transpose)

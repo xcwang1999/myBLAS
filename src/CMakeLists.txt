@@ -1,11 +1,9 @@
 set(MYBLAS_LIBRARIES "")
-
-macro(add_sublibrary target)
+macro(add_myblas_sublibrary target)
     set(options NO_PTX_OPTIONS)
     cmake_parse_arguments(ARG "${options}" "" "" ${ARGN})
     file(GLOB_RECURSE srcs CONFIGURE_DEPENDS 
         ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp 
-        ${CMAKE_CURRENT_SOURCE_DIR}/*.cc 
         ${CMAKE_CURRENT_SOURCE_DIR}/*.cu
     )
     add_library(${target} STATIC
@@ -13,7 +11,8 @@ macro(add_sublibrary target)
     )
     target_include_directories(${target} PRIVATE
         ${PROJECT_SOURCE_DIR}/include
-        ${CUDA_INCLUDE_DIRS}
+        ${PROJECT_SOURCE_DIR}/src/include
+        ${CUDAToolkit_INCLUDE_DIRS}
     )
     target_compile_options(${target} PRIVATE
         -w
@@ -33,11 +32,10 @@ endmacro()
 
 add_subdirectory(hgemm)
 add_subdirectory(sgemm)
-add_subdirectory(matrix)
-add_subdirectory(others)
+add_subdirectory(transpose)
 
-add_library(myblas INTERFACE)
+add_library(myblas STATIC myblas.cpp)
 message(STATUS "MYBLAS_LIBRARIES: ${MYBLAS_LIBRARIES}")
-target_link_libraries(myblas INTERFACE
-    ${MYBLAS_LIBRARIES}
-)
+target_link_libraries(myblas PUBLIC ${MYBLAS_LIBRARIES})
+target_include_directories(myblas PUBLIC ${PROJECT_SOURCE_DIR}/include)
+

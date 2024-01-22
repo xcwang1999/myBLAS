@@ -1,13 +1,12 @@
-macro(add_myblas_unit_test target)
+macro(add_myblas_benchmark target)
     file(GLOB_RECURSE srcs CONFIGURE_DEPENDS
             ${ARGN}
     )
-    enable_testing()
     add_executable(${target}
             ${srcs}
     )
     target_include_directories(${target} SYSTEM PRIVATE
-             ${CUDAToolkit_INCLUDE_DIRS}
+            ${CUDAToolkit_INCLUDE_DIRS}
     )
     target_include_directories(${target} PRIVATE
             ${PROJECT_SOURCE_DIR}/include
@@ -16,11 +15,9 @@ macro(add_myblas_unit_test target)
     target_link_libraries(${target} PRIVATE
             myblas
             cublas
-            GTest::gtest
             CUDA::cudart
+            benchmark::benchmark
     )
 endmacro()
-
-include(GoogleTest)
 
 add_subdirectory(sgemm)
